@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+calc(){ awk "BEGIN { print "$*" }"; }
+cd "/imgdirectory"
+mkdir "panoramas"
+for img in *.JPG
+do
+    res=$(identify $img | cut -d " " -f 3)
+    xRes=$(echo $res | cut -d "x" -f 1)
+    yRes=$(echo $res | cut -d "x" -f 2)
+    ar=$(calc $yRes/$xRes)
+    eval=$(echo $ar'<'0.75 | bc -l)
+    if [ $eval -eq 1 ]
+    then
+        ln $img panoramas/$img
+    fi
+
+done
